@@ -1,0 +1,160 @@
+{
+  "name": "@vevedh/feathersjs-v6-nitro",
+  "version": "0.1.0-alpha.7",
+  "description": "Native FeathersJS v6 HTTP, SSE and optional Socket.IO integration for Nuxt 4 and Nitro, with a full interactive playground",
+  "type": "module",
+  "license": "MIT",
+  "author": "vevedh",
+  "contributors": [
+    "Gabor Torma (original feathers-nitro inspiration)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vevedh/feathersjs-v6-nitro.git"
+  },
+  "homepage": "https://github.com/vevedh/feathersjs-v6-nitro#readme",
+  "bugs": {
+    "url": "https://github.com/vevedh/feathersjs-v6-nitro/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/vevedh"
+  },
+  "keywords": [
+    "feathers",
+    "feathersjs",
+    "feathers-v6",
+    "nuxt",
+    "nuxt-4",
+    "nitro",
+    "h3",
+    "rest",
+    "sse",
+    "web-standards",
+    "socket.io",
+    "realtime"
+  ],
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "SECURITY.md"
+  ],
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./handler": {
+      "types": "./dist/runtime/handler.d.ts",
+      "import": "./dist/runtime/handler.mjs"
+    },
+    "./lifecycle": {
+      "types": "./dist/runtime/lifecycle.d.ts",
+      "import": "./dist/runtime/lifecycle.mjs"
+    },
+    "./registry": {
+      "types": "./dist/runtime/registry.d.ts",
+      "import": "./dist/runtime/registry.mjs"
+    },
+    "./path": {
+      "types": "./dist/runtime/path.d.ts",
+      "import": "./dist/runtime/path.mjs"
+    },
+    "./security": {
+      "types": "./dist/runtime/security.d.ts",
+      "import": "./dist/runtime/security.mjs"
+    },
+    "./sse": {
+      "types": "./dist/runtime/sse.d.ts",
+      "import": "./dist/runtime/sse.mjs"
+    },
+    "./types": {
+      "types": "./dist/runtime/types.d.ts",
+      "import": "./dist/runtime/types.mjs"
+    },
+    "./define": {
+      "types": "./dist/runtime/define.d.ts",
+      "import": "./dist/runtime/define.mjs"
+    },
+    "./diagnostics": {
+      "types": "./dist/runtime/diagnostics.d.ts",
+      "import": "./dist/runtime/diagnostics.mjs"
+    },
+    "./socket.io": {
+      "types": "./dist/socket.io.d.ts",
+      "import": "./dist/socket.io.mjs"
+    }
+  },
+  "scripts": {
+    "build": "unbuild",
+    "prepack": "npm run build",
+    "prepare": "nuxi prepare playground/nuxt-app",
+    "typecheck": "tsc --noEmit && vue-tsc --noEmit -p playground/nuxt-app/tsconfig.json",
+    "lint": "eslint src test build.config.ts vitest.config.ts vitest.e2e.config.ts --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "node scripts/clean-nuxt-test-artifacts.mjs && vitest run --config vitest.e2e.config.ts --no-file-parallelism",
+    "pack:check": "node scripts/check-pack-contents.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build && npm run check:contract && npm run test:exports && npm run check:publint && npm run check:types-package && npm run build:playground",
+    "build:playground": "nuxi build playground/nuxt-app",
+    "test:exports": "node scripts/test-exports.mjs",
+    "verify:release": "npm run verify && npm run test:e2e && npm run pack:check",
+    "check:publint": "publint",
+    "check:types-package": "attw --pack . --profile esm-only",
+    "check:package": "npm run build && npm run test:exports && npm run check:publint && npm run check:types-package && npm run pack:check",
+    "check:contract": "node scripts/check-package-contract.mjs",
+    "dev:playground": "nuxi dev playground/nuxt-app",
+    "test:vitest": "vitest run",
+    "test:playground": "npm run test:e2e"
+  },
+  "peerDependencies": {
+    "feathers": ">=6.0.0-pre.11 <7.0.0",
+    "h3": ">=1.15.0 <3.0.0",
+    "nitropack": ">=2.13.0 <3.0.0",
+    "socket.io": ">=4.8.0 <5.0.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@nuxt/test-utils": "4.0.3",
+    "@types/node": "22.20.0",
+    "@typescript-eslint/eslint-plugin": "8.46.1",
+    "@typescript-eslint/parser": "8.46.1",
+    "eslint": "9.39.5",
+    "feathers": "6.0.0-pre.11",
+    "h3": "1.15.11",
+    "nitropack": "2.13.4",
+    "nuxt": "4.4.8",
+    "publint": "0.3.15",
+    "socket.io": "4.8.3",
+    "socket.io-client": "4.8.3",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.1",
+    "unbuild": "3.6.1",
+    "vitest": "4.1.9",
+    "vue-tsc": "3.3.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "vue-router": "5.0.3"
+    }
+  },
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "socket.io": {
+      "optional": true
+    }
+  }
+}

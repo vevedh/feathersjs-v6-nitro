@@ -1,0 +1,78 @@
+# Dependencies and generated build artifacts
+node_modules
+.nuxt
+.nitro
+.output
+dist
+coverage
+.pack-check
+*.tgz
+*.log
+
+# Environment and operating-system files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# AI assistants, generated prompts and private working context
+# Project-local agent instructions and patch memory
+**/AGENTS.md
+**/AGENTS.*.md
+**/patch-memory/
+
+# Project prompt and context documents
+**/AI_CONTEXT.md
+**/AI_CONTEXT_*.md
+**/AI_CONTEXT-*.md
+**/PROMPT_CONTEXT.md
+**/PROMPT_MASTER*.md
+**/PROMPT_*.md
+**/CHATGPT.md
+**/CLAUDE.md
+**/CODEX.md
+**/GEMINI.md
+
+# OpenAI / ChatGPT / Codex
+**/.ai/
+**/.openai/
+**/.chatgpt/
+**/.codex/
+
+# Anthropic Claude
+**/.claude/
+
+# Cursor
+**/.cursor/
+**/.cursorignore
+**/.cursorrules
+
+# GitHub Copilot prompt and instruction files
+**/.github/copilot-instructions.md
+**/.github/instructions/
+**/.github/prompts/
+**/.vscode/prompts/
+
+# Google Gemini
+**/.gemini/
+
+# Continue
+**/.continue/
+
+# Cline / Roo Code
+**/.cline/
+**/.clinerules
+**/.roo/
+**/.roorules
+
+# Windsurf
+**/.windsurf/
+**/.windsurfrules
+
+# Aider
+**/.aider*
+
+# Private analysis and validation reports
+**/docs-private/ANALYSE_*.md
+**/docs-private/VALIDATIONS_*.md

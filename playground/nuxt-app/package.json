@@ -1,0 +1,22 @@
+{
+  "name": "feathersjs-v6-nitro-playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "prepare": "nuxt prepare",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run --config ../../vitest.e2e.config.ts --no-file-parallelism"
+  },
+  "dependencies": {
+    "@vevedh/feathersjs-v6-nitro": "workspace:*",
+    "feathers": "6.0.0-pre.11",
+    "nuxt": "4.4.8",
+    "socket.io-client": "4.8.3"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vue-tsc": "3.3.5"
+  }
+}
