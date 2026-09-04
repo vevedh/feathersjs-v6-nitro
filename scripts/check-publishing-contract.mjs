@@ -25,7 +25,7 @@ for (const required of [
   'runs-on: ubuntu-latest',
   'environment: npm',
   'actions/checkout@v6',
-  'actions/setup-node@v6',
+  'actions/setup-node@v7',
   'node-version: 22.19.0',
   'package-manager-cache: false',
   'npm install --global npm@11.19.0',

@@ -2,6 +2,14 @@
 
 ## 0.1.0-alpha.9 — 2026-09-04
 
+### Patch 012-r3 — setup-node v7 OIDC compatibility
+
+- Use `actions/setup-node@v7` in the npm release workflow.
+- Keep the strict Trusted Publishing guard: real `NODE_AUTH_TOKEN`/`NPM_TOKEN` credentials remain forbidden.
+- Fix the GitHub Actions failure caused by the legacy `XXXXX-XXXXX-XXXXX-XXXXX` dummy `NODE_AUTH_TOKEN` exported by older setup-node releases when `registry-url` is configured.
+- No runtime, test, dependency, lockfile, coverage threshold, or package version change.
+
+
 ### Publication sécurisée — Patch 012
 
 - migration du workflow npm vers **GitHub Trusted Publishing (OIDC)** ;

@@ -21,6 +21,8 @@ npm install --global npm@11.19.0
 npm trust github @vevedh/feathersjs-v6-nitro --repo vevedh/feathersjs-v6-nitro --file release.yml --env npm --allow-publish -y
 ```
 
+The release workflow uses `actions/setup-node@v7`; older setup-node releases exported a dummy `NODE_AUTH_TOKEN` (`XXXXX-XXXXX-XXXXX-XXXXX`) when `registry-url` was configured, which conflicts with the strict tokenless publish guard.
+
 The repository and package are public, so npm Trusted Publishing automatically creates provenance attestations. The workflow therefore does not pass `--provenance` and does not use `NPM_TOKEN` or `NODE_AUTH_TOKEN`.
 
 ## GitHub environment
