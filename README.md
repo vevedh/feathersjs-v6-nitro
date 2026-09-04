@@ -583,7 +583,7 @@ Le gate de release exécute la couverture V8 sur le code `src/` avec les seuils 
 
 Le fichier purement déclaratif `src/runtime/types.ts` est exclu de ces métriques. La CI conserve `coverage/coverage-summary.json` et `coverage/lcov.info` comme artefacts de diagnostic pendant 14 jours. Les seuils sont fixes (`autoUpdate` désactivé) : toute hausse devra être une décision explicite de patch.
 
-La baseline Patch 011 validée atteint **83,56 % statements**, **76,49 % branches**, **82,50 % functions** et **83,48 % lines** sur 67 tests unitaires. Pour reproduire le gate final sous Windows, utiliser `pnpm validate:patch011:windows`; `bootstrap:patch011:windows` reste réservé à une future régénération explicite du lockfile.
+La baseline Patch 011 validée atteint **83,56 % statements**, **76,49 % branches**, **82,50 % functions** et **83,48 % lines** sur 67 tests unitaires. La baseline de couverture reste celle du Patch 011. Pour la release courante, utiliser `pnpm validate:patch013:windows`; `bootstrap:patch011:windows` reste réservé à une future régénération explicite du lockfile.
 
 ## Publication
 
@@ -603,7 +603,7 @@ npm publish --access public --tag next
 
 Il ne doit contenir ni `NPM_TOKEN`, ni `NODE_AUTH_TOKEN`, ni `--provenance`. Voir [RELEASING.md](./RELEASING.md) pour la procédure complète.
 
-## État de la version 0.1.0-alpha.9
+## État de la version 0.1.0-alpha.10
 
 - Patch 001 : bridge HTTP natif et lifecycle ;
 - Patch 002 : multi-instance atomique et routage avancé ;
@@ -616,7 +616,8 @@ Il ne doit contenir ni `NPM_TOKEN`, ni `NODE_AUTH_TOKEN`, ni `--provenance`. Voi
 - Patch 009 : baseline Nuxt `4.5.2`, Vite `8.2.2`, Vue `3.5.42`, Vitest `4.1.11` et Node `22.19+` ;
 - Patch 010 : promotion `0.1.0-alpha.8`, lockfile régénéré puis figé et gate de release Windows complet validé ;
 - Patch 011 : `0.1.0-alpha.9` validé avec couverture V8 obligatoire, 67/67 tests unitaires, 6/6 E2E, seuils CI, contrôles de fuite de listeners et lockfile figé.
-- Patch 012 : migration de la publication `alpha.9` vers npm Trusted Publishing/OIDC, suppression des tokens longue durée et blocage des publications locales.
+- Patch 012 : migration de la publication vers npm Trusted Publishing/OIDC, suppression des tokens longue durée, provenance automatique et compatibilité npm 12.
+- Patch 013 : promotion vers `0.1.0-alpha.10` sans changement runtime et ajout d’un préflight registre qui refuse une version npm déjà publiée avant d’exécuter le gate CI complet.
 
 ## Contribution et sécurité
 

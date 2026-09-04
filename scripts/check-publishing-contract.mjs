@@ -11,6 +11,7 @@ assert.equal(pkg.publishConfig?.access, 'public')
 assert.equal(pkg.publishConfig?.tag, 'next')
 assert.equal(pkg.publishConfig?.provenance, undefined, 'Trusted Publishing generates provenance automatically; do not force local provenance.')
 assert.equal(pkg.scripts?.prepublishOnly, 'node scripts/assert-trusted-publish-context.mjs')
+assert.equal(pkg.scripts?.['check:version-available'], 'node scripts/assert-version-unpublished.mjs')
 assert.equal(
   pkg.scripts?.['check:publishing'],
   'node scripts/check-publishing-contract.mjs && node scripts/check-local-publish-guard.mjs',
@@ -30,6 +31,7 @@ for (const required of [
   'package-manager-cache: false',
   'npm install --global npm@12.0.2',
   'npm install --global pnpm@9.15.9',
+  'node scripts/assert-version-unpublished.mjs',
   'pnpm install --frozen-lockfile',
   'pnpm verify:release',
   'npm publish --access public --tag next',

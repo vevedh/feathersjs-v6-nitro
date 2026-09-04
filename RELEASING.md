@@ -43,13 +43,14 @@ Create a GitHub environment named `npm`. Restrict deployments to the `main` bran
 
 3. Commit and push the release preparation to `main`.
 4. In GitHub Actions, run **Publish npm** from the `main` branch.
-5. The workflow repeats `pnpm verify:release`, then executes:
+5. Before installing dependencies, the workflow calls `node scripts/assert-version-unpublished.mjs`. A published npm version is immutable, so the workflow stops immediately if that exact version already exists.
+6. The workflow repeats `pnpm verify:release`, then executes:
 
    ```bash
    npm publish --access public --tag next
    ```
 
-6. Verify the registry state:
+7. Verify the registry state:
 
    ```bash
    npm view @vevedh/feathersjs-v6-nitro version
@@ -69,3 +70,8 @@ pnpm check:local-publish-guard
 ```
 
 This command executes the real `prepublishOnly` guard in a child process with all GitHub/OIDC variables removed and succeeds only when that simulated local publication is rejected for the expected reason.
+
+
+## Version immutability
+
+An npm version cannot be overwritten. Patch 012 proved the Trusted Publishing path by reaching npm with a signed GitHub Actions provenance statement, but the registry rejected `0.1.0-alpha.9` because that version already existed. Patch 013 therefore promotes the unchanged runtime baseline to `0.1.0-alpha.10` and checks version availability before the expensive CI gate.

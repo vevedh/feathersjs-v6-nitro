@@ -33,6 +33,8 @@ jobs:
           node --version
           npm --version
           pnpm --version
+      - name: Refuse an already published version
+        run: node scripts/assert-version-unpublished.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify:release
       - name: Publish to npm with Trusted Publishing

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0-alpha.10 — 2026-09-04
+
+### Patch 013 — release promotion and immutable-version preflight
+
+- promeut la baseline runtime inchangée de `0.1.0-alpha.9` vers `0.1.0-alpha.10` ;
+- conserve Feathers `6.0.0-pre.11`, Nuxt `4.5.2`, Nitro `2.13.4`, Vite `8.2.2`, Vue `3.5.42` et le lockfile validé ;
+- conserve GitHub Trusted Publishing/OIDC avec `actions/setup-node@v7`, Node `24.15.0`, npm `12.0.2`, pnpm `9.15.9` et le dist-tag `next` ;
+- ajoute `scripts/assert-version-unpublished.mjs` : le workflow refuse immédiatement une version déjà présente sur npm avant l’installation et le gate complet ;
+- ajoute `pnpm validate:patch013:windows` avec installation `--frozen-lockfile` et gate de release complet ;
+- enregistre que le run Patch 012-r5 a obtenu une provenance GitHub Actions signée puis un `E403` uniquement parce que `0.1.0-alpha.9` existait déjà ;
+- aucun changement `src/**`, `test/**`, dépendance ou seuil de couverture.
+
 ## 0.1.0-alpha.9 — 2026-09-04
 
 ### Patch 012-r5 — compatibilité npm 12 pack manifest

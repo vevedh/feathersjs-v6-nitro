@@ -1,6 +1,6 @@
 {
   "name": "@vevedh/feathersjs-v6-nitro",
-  "version": "0.1.0-alpha.9",
+  "version": "0.1.0-alpha.10",
   "description": "Native FeathersJS v6 HTTP, SSE and optional Socket.IO integration for Nuxt 4 and Nitro, with a full interactive playground",
   "type": "module",
   "license": "MIT",
@@ -128,7 +128,9 @@
     "check:publishing": "node scripts/check-publishing-contract.mjs && node scripts/check-local-publish-guard.mjs",
     "prepublishOnly": "node scripts/assert-trusted-publish-context.mjs",
     "validate:patch012:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch012.ps1",
-    "check:local-publish-guard": "node scripts/check-local-publish-guard.mjs"
+    "check:local-publish-guard": "node scripts/check-local-publish-guard.mjs",
+    "check:version-available": "node scripts/assert-version-unpublished.mjs",
+    "validate:patch013:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch013.ps1"
   },
   "peerDependencies": {
     "feathers": ">=6.0.0-pre.11 <7.0.0",
