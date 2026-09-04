@@ -138,6 +138,33 @@ describe('optional Feathers v6 Socket.IO transport', () => {
     expect(() => new FeathersV6NitroSocketIoTransport(rootEntry)).toThrow(/overlaps/u)
   })
 
+  it('removes application listeners exactly once when the transport closes', async () => {
+    const app = feathers()
+    const entry = getFeathersV6NitroRegistry(createMockNitroApp()).register({
+      id: 'socket-listener-cleanup',
+      app,
+      basePath: '/api/socket-listener-cleanup',
+    })
+
+    const before = {
+      publish: app.listeners('publish').length,
+      disconnect: app.listeners('disconnect').length,
+      logout: app.listeners('logout').length,
+    }
+
+    const transport = new FeathersV6NitroSocketIoTransport(entry)
+    expect(app.listeners('publish')).toHaveLength(before.publish + 1)
+    expect(app.listeners('disconnect')).toHaveLength(before.disconnect + 1)
+    expect(app.listeners('logout')).toHaveLength(before.logout + 1)
+
+    await transport.close()
+    await transport.close()
+
+    expect(app.listeners('publish')).toHaveLength(before.publish)
+    expect(app.listeners('disconnect')).toHaveLength(before.disconnect)
+    expect(app.listeners('logout')).toHaveLength(before.logout)
+  })
+
   it('runs Feathers service methods and publishes channel events', async () => {
     const { socket } = await startSocketServer()
 

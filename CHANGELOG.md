@@ -1,5 +1,82 @@
 # Changelog
 
+## 0.1.0-alpha.9 — 2026-09-04
+
+- Patch 011-r3: compatibility cleanup for `typescript-eslint 8.69.0` (remove unnecessary assertions/default assignment) with no intended runtime behavior change.
+
+### Qualité et couverture — Patch 011
+
+- ajout de `@vitest/coverage-v8` `4.1.11`, strictement aligné sur Vitest `4.1.11` ;
+- ajout du gate `pnpm test:coverage`, désormais obligatoire dans `verify` et donc dans `verify:release` ;
+- seuils V8 initiaux : 80 % lignes, fonctions et statements, 75 % branches ;
+- rapports `text`, `json-summary` et `lcov`, avec conservation CI des résumés de couverture ;
+- ajout d'un job CI dédié à la couverture sur Ubuntu / Node `22.19.0` ;
+- matrice CI rendue déterministe sur Node `22.19.0` et `24.11.0`.
+
+### Tests de non-régression
+
+- Patch 011-r2 : après le premier gate Windows à **71,15 % de branches**, ajout de tests ciblés sécurité/réponse sans abaisser le seuil de 75 % ;
+- couverture directe de `response.ts`, des validations CORS/request-id, de `Content-Length`, des politiques SSE/5xx et du contrôleur de timeout ;
+- lifecycle : vérifie l'agrégation simultanée d'une erreur de cleanup transport et d'une erreur `app.teardown()` tout en fermant l'instance ;
+- SSE : vérifie que le listener `publish` ajouté par une connexion est retiré après annulation du stream ;
+- Socket.IO : vérifie que les listeners applicatifs `publish`, `disconnect` et `logout` sont retirés exactement une fois lors d'un `close()` idempotent.
+
+### Outillage
+
+- `publint` `0.3.15` → `0.3.24` ;
+- `@types/node` `22.20.0` → `22.20.1`, en restant volontairement sur la ligne Node 22 ;
+- `@typescript-eslint/eslint-plugin`, `@typescript-eslint/parser` et `typescript-eslint` `8.46.1` → `8.69.0` ;
+- ajout de `pnpm bootstrap:patch011:windows` pour régénérer le lockfile, exécuter la couverture puis le gate complet avant gel définitif.
+
+### Validation finale — Patch 011
+
+- lockfile réellement régénéré sous Windows avec Node `22.19.0` et pnpm `9.15.9`, puis figé pour les installations reproductibles ;
+- typecheck et lint `typescript-eslint@8.69.0` verts après nettoyage des trois diagnostics r3 ;
+- **67/67 tests unitaires** ; couverture V8 globale : **83,56 % statements**, **76,49 % branches**, **82,50 % functions**, **83,48 % lines** ;
+- build package, contrats package/toolchain, exports, publint, ATTW et build Nuxt 4.5.2 / Vite 8.2.2 verts ;
+- **6/6 E2E** validés : page playground, CRUD Feathers v6, multi-instance/diagnostics, sécurité, SSE et Socket.IO ;
+- `pack:check` vert avec tarball `@vevedh/feathersjs-v6-nitro@0.1.0-alpha.9` de 41 entrées ;
+- ajout de `pnpm validate:patch011:windows`, qui impose `pnpm install --frozen-lockfile` avant le gate complet.
+
+### Inchangé volontairement
+
+- Feathers `6.0.0-pre.11` ;
+- Nuxt `4.5.2`, Nitro `2.13.4`, H3 `1.15.11`, Vite `8.2.2`, Vue `3.5.42`, Vue Router `5.2.0` ;
+- TypeScript `5.9.3`, Socket.IO `4.8.3`, pnpm `9.15.9` ;
+- publication npm sous dist-tag `next` uniquement.
+
+## 0.1.0-alpha.8 — 2026-09-04
+
+### Corrigé — Patch 008
+
+- le teardown exécute les callbacks de nettoyage même si l’instance n’a jamais été initialisée ou si `app.setup()` échoue ;
+- une erreur du hook `feathers:v6:beforeTeardown` n’empêche plus le nettoyage des transports ni `app.teardown()` ;
+- les erreurs de hooks et de cleanup sont agrégées après tentative de fermeture complète ;
+- le peer dependency H3 est limité à la ligne réellement validée avec Nitro 2 : `>=1.15.0 <2.0.0`.
+
+### Dépendances — Patch 009
+
+- Nuxt `4.4.8` → `4.5.2` ;
+- migration Vite 7 → Vite `8.2.2` ;
+- `@nuxt/test-utils` `4.0.3` → `4.2.0` ;
+- Vitest `4.1.9` → `4.1.11` ;
+- `vue-tsc` `3.3.5` → `3.3.11` ;
+- résolution déterministe de Vue `3.5.42` et Vue Router `5.2.0` ;
+- baseline Node alignée sur Nuxt 4.5.2 : `^22.19.0 || ^24.11.0 || >=26.0.0` ;
+- Feathers reste épinglé à `6.0.0-pre.11`, Nitro à `2.13.4`, H3 à `1.15.11`, Socket.IO à `4.8.3` et TypeScript à `5.9.3`.
+
+### Validation et publication — Patch 010
+
+- intégration du `pnpm-lock.yaml` réellement régénéré avec pnpm `9.15.9` ;
+- disparition des anciennes résolutions Nuxt `4.4.8`, Vite `7.3.6` et Vue Router `5.0.3` du lockfile ;
+- validation Windows avec Node `22.19.0` : typecheck, lint, **57/57 tests**, build package, contrats, exports, publint, ATTW et build Nuxt production ;
+- validation **6/6 E2E** : HTTP CRUD, multi-instance, diagnostics, probes de sécurité, SSE et Socket.IO ;
+- `pack:check` validé avec un tarball npm de 41 entrées ;
+- ajout de `pnpm validate:patch010:windows` qui impose désormais `pnpm install --frozen-lockfile` avant le gate complet ;
+- `publishConfig.tag` et le workflow GitHub de release verrouillent la publication sur le dist-tag npm `next` tant que Feathers v6 demeure en prérelease.
+- validation finale de `pnpm validate:patch010:windows` avec installation `--frozen-lockfile`, **57/57 tests unitaires** et **6/6 E2E** ;
+- correction du caractère `\` parasite en tête de `scripts/validate-patch010.ps1` et messages ASCII-only pour Windows PowerShell 5.1.
+
 ## 0.1.0-alpha.7 — 2026-07-12
 
 ### Ajouté — Patch 007

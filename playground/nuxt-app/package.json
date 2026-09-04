@@ -12,11 +12,11 @@
   "dependencies": {
     "@vevedh/feathersjs-v6-nitro": "workspace:*",
     "feathers": "6.0.0-pre.11",
-    "nuxt": "4.4.8",
+    "nuxt": "4.5.2",
     "socket.io-client": "4.8.3"
   },
   "devDependencies": {
     "typescript": "5.9.3",
-    "vue-tsc": "3.3.5"
+    "vue-tsc": "3.3.11"
   }
 }

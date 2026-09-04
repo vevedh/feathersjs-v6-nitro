@@ -8,6 +8,7 @@ coverage
 .pack-check
 *.tgz
 *.log
+**/node-compile-cache/
 
 # Environment and operating-system files
 .env

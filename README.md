@@ -26,9 +26,9 @@ Le cœur s'appuie sur les primitives Web Standards de Feathers v6 et de Nitro : 
 - helpers typés `defineFeathersV6NitroInstance` et `defineFeathersV6NitroInstances` ;
 - diagnostics opérationnels redacted via `getFeathersV6NitroDiagnostics` ;
 - exports secondaires stricts et ESM-only ;
-- tests unitaires, intégration H3 et E2E Nuxt 4 ;
+- tests unitaires, intégration H3, couverture V8 avec seuils et E2E Nuxt 4 ;
 - contrôle `publint`, `@arethetypeswrong/cli` et contenu du tarball ;
-- CI Linux/Windows sur Node.js 22 et 24 ;
+- CI Linux/Windows sur Node.js 22.19.0 et 24.11.0, avec job de couverture V8 dédié ;
 - workflow npm avec provenance.
 
 ### Compatibilité Socket.IO optionnelle
@@ -78,12 +78,14 @@ La documentation détaillée se trouve dans `playground/nuxt-app/README.md`.
 
 ## Prérequis
 
-- Node.js 22.12 ou supérieur ;
-- Nuxt 4 ;
+- Node.js `^22.19.0`, `^24.11.0` ou `>=26.0.0` ;
+- Nuxt `4.5.2` pour la matrice de développement et le playground ;
+- Vite `8.2.x` via Nuxt 4.5 ;
 - Nitro 2.13 ou supérieur ;
+- H3 `1.15.x` (la branche H3 2 / Nitro 3 n’est pas encore déclarée compatible) ;
 - Feathers `6.0.0-pre.11` ou une version v6 compatible.
 
-Le package est **ESM-only**, comme Nuxt 4, Nitro et Feathers v6.
+Le package est **ESM-only**, comme Nuxt 4, Nitro et Feathers v6. La matrice de validation du dépôt épingle Vite `8.2.2`, Vue `3.5.42` et Vue Router `5.2.0` afin de rendre les builds de stabilisation reproductibles.
 
 ## Installation
 
@@ -555,6 +557,7 @@ pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm test:coverage
 pnpm build
 pnpm test:e2e
 pnpm check:contract
@@ -562,12 +565,29 @@ pnpm check:publint
 pnpm check:types-package
 pnpm pack:check
 pnpm verify:release
+pnpm validate:patch010:windows
+pnpm bootstrap:patch011:windows   # migration/regeneration only
+pnpm validate:patch011:windows    # frozen final baseline
 pnpm dev:playground
 ```
 
+## Qualité et couverture
+
+
+Le gate de release exécute la couverture V8 sur le code `src/` avec les seuils globaux suivants :
+
+- lignes : **80 %** ;
+- fonctions : **80 %** ;
+- statements : **80 %** ;
+- branches : **75 %**.
+
+Le fichier purement déclaratif `src/runtime/types.ts` est exclu de ces métriques. La CI conserve `coverage/coverage-summary.json` et `coverage/lcov.info` comme artefacts de diagnostic pendant 14 jours. Les seuils sont fixes (`autoUpdate` désactivé) : toute hausse devra être une décision explicite de patch.
+
+La baseline Patch 011 validée atteint **83,56 % statements**, **76,49 % branches**, **82,50 % functions** et **83,48 % lines** sur 67 tests unitaires. Pour reproduire le gate final sous Windows, utiliser `pnpm validate:patch011:windows`; `bootstrap:patch011:windows` reste réservé à une future régénération explicite du lockfile.
+
 ## Publication
 
-Le workflow `.github/workflows/release.yml` exécute `pnpm verify:release`, publie avec provenance npm et accepte les dist-tags `next` ou `latest`.
+Le workflow `.github/workflows/release.yml` exécute `pnpm verify:release` et publie avec provenance npm exclusivement sous le dist-tag `next` tant que Feathers v6 reste en prérelease. `publishConfig.tag` applique le même garde-fou aux publications manuelles.
 
 Avant une publication manuelle :
 
@@ -578,7 +598,7 @@ npm pack
 npm publish --access public --provenance --tag next
 ```
 
-## État de la version 0.1.0-alpha.7
+## État de la version 0.1.0-alpha.9
 
 - Patch 001 : bridge HTTP natif et lifecycle ;
 - Patch 002 : multi-instance atomique et routage avancé ;
@@ -586,7 +606,11 @@ npm publish --access public --provenance --tag next
 - Patch 004 : SSE natif Feathers v6 avec channels et nettoyage réseau ;
 - Patch 005 : DX, CI multi-OS et chaîne de publication vérifiée ;
 - Patch 006 : Socket.IO Node optionnel, isolé du cœur ;
-- Patch 007 : playground Nuxt 4 complet avec matrice HTTP, SSE, Socket.IO, multi-instance et sécurité.
+- Patch 007 : playground Nuxt 4 complet avec matrice HTTP, SSE, Socket.IO, multi-instance et sécurité ;
+- Patch 008 : teardown résilient et nettoyage des transports même avant setup ou après échec de setup ;
+- Patch 009 : baseline Nuxt `4.5.2`, Vite `8.2.2`, Vue `3.5.42`, Vitest `4.1.11` et Node `22.19+` ;
+- Patch 010 : promotion `0.1.0-alpha.8`, lockfile régénéré puis figé et gate de release Windows complet validé ;
+- Patch 011 : `0.1.0-alpha.9` validé avec couverture V8 obligatoire, 67/67 tests unitaires, 6/6 E2E, seuils CI, contrôles de fuite de listeners et lockfile figé.
 
 ## Contribution et sécurité
 

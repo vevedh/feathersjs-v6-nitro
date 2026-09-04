@@ -241,7 +241,7 @@ async function runSocketMethod(
       throw new NotFound(`Service '${rawPath}' not found.`)
     }
 
-    const { service, params: route = {} } = lookup
+    const { service, params: route } = lookup
     const { methods } = getServiceOptions(service)
     if (!(methods ?? []).includes(method)) {
       throw new MethodNotAllowed(`Method '${method}' not allowed on service '${rawPath}'.`)

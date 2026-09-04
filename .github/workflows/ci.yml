@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node: [22, 24]
+        node: ['22.19.0', '24.11.0']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -37,10 +37,36 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm check:contract
+      - run: pnpm check:toolchain
       - run: pnpm test:exports
       - run: pnpm check:publint
       - run: pnpm check:types-package
       - run: pnpm pack:check
+
+  coverage:
+    name: Coverage (Ubuntu, Node 22.19.0)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.19.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-node-22
+          path: |
+            coverage/coverage-summary.json
+            coverage/lcov.info
+          if-no-files-found: warn
+          retention-days: 14
 
   nuxt-e2e:
     name: Nuxt E2E (${{ matrix.os }})
@@ -57,7 +83,7 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.19.0
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:playground

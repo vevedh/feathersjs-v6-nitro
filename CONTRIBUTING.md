@@ -4,7 +4,7 @@ Merci de contribuer à l'intégration FeathersJS v6 pour Nitro.
 
 ## Environnement
 
-- Node.js 22.12 ou supérieur ;
+- Node.js `^22.19.0`, `^24.11.0` ou `>=26.0.0` ;
 - pnpm 9.15.9 ;
 - Git avec fins de ligne normalisées.
 
@@ -27,7 +27,7 @@ pnpm verify:release
 ## Déroulement d'une modification
 
 1. Lire `AGENTS.md`, `patch-memory/000-index.md` et la dernière mémoire de patch.
-2. Ajouter ou adapter les tests avant de considérer le changement terminé.
+2. Ajouter ou adapter les tests avant de considérer le changement terminé, sans abaisser les seuils de couverture pour contourner une régression.
 3. Mettre à jour la documentation publique et les notes privées utiles.
 4. Exécuter la matrice locale complète.
 5. Inspecter le tarball npm produit.
@@ -38,9 +38,11 @@ pnpm verify:release
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm test:coverage
 pnpm test:e2e
 pnpm build
 pnpm check:contract
+pnpm check:toolchain
 pnpm test:exports
 pnpm check:publint
 pnpm check:types-package
@@ -70,3 +72,7 @@ La description doit indiquer :
 - les changements d'API publique ou de peer dependencies.
 
 Les données personnelles, secrets, domaines internes et jetons ne doivent jamais être ajoutés aux fixtures ou aux journaux.
+
+## Validation Windows reproductible
+
+Après gel du lockfile Patch 011, utiliser `pnpm validate:patch011:windows` pour imposer `pnpm install --frozen-lockfile` puis le gate complet `verify:release`.

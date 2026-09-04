@@ -8,6 +8,29 @@ function contextFor(entry: FeathersV6NitroInstanceEntry): FeathersV6NitroSetupHo
   }
 }
 
+async function runCleanupCallbacks(
+  entry: FeathersV6NitroInstanceEntry,
+  errors: unknown[],
+): Promise<void> {
+  const cleanupCallbacks = [...entry.cleanupCallbacks].reverse()
+  entry.cleanupCallbacks.clear()
+
+  for (const cleanup of cleanupCallbacks) {
+    try {
+      await cleanup()
+    }
+    catch (error: unknown) {
+      errors.push(error)
+    }
+  }
+}
+
+function throwTeardownErrors(entry: FeathersV6NitroInstanceEntry, errors: readonly unknown[]): void {
+  if (errors.length > 0) {
+    throw new AggregateError(errors, `Feathers Nitro instance "${entry.options.id}" failed to close cleanly.`)
+  }
+}
+
 export function setupFeathersV6NitroInstance(entry: FeathersV6NitroInstanceEntry): Promise<void> {
   if (entry.status === 'ready') {
     return Promise.resolve()
@@ -59,32 +82,34 @@ export function teardownFeathersV6NitroInstance(entry: FeathersV6NitroInstanceEn
         await entry.setupPromise
       }
       catch {
+        const errors: unknown[] = []
+        await runCleanupCallbacks(entry, errors)
         entry.status = 'closed'
+        throwTeardownErrors(entry, errors)
         return
       }
     }
 
     if (entry.status !== 'ready') {
+      const errors: unknown[] = []
+      await runCleanupCallbacks(entry, errors)
       entry.status = 'closed'
+      throwTeardownErrors(entry, errors)
       return
     }
 
     entry.status = 'tearing-down'
     const context = contextFor(entry)
-    await entry.nitroApp.hooks.callHook('feathers:v6:beforeTeardown', context)
-
     const errors: unknown[] = []
-    const cleanupCallbacks = [...entry.cleanupCallbacks].reverse()
-    entry.cleanupCallbacks.clear()
 
-    for (const cleanup of cleanupCallbacks) {
-      try {
-        await cleanup()
-      }
-      catch (error: unknown) {
-        errors.push(error)
-      }
+    try {
+      await entry.nitroApp.hooks.callHook('feathers:v6:beforeTeardown', context)
     }
+    catch (error: unknown) {
+      errors.push(error)
+    }
+
+    await runCleanupCallbacks(entry, errors)
 
     try {
       await entry.options.app.teardown()
@@ -96,11 +121,14 @@ export function teardownFeathersV6NitroInstance(entry: FeathersV6NitroInstanceEn
       entry.status = 'closed'
     }
 
-    await entry.nitroApp.hooks.callHook('feathers:v6:afterTeardown', context)
-
-    if (errors.length > 0) {
-      throw new AggregateError(errors, `Feathers Nitro instance "${entry.options.id}" failed to close cleanly.`)
+    try {
+      await entry.nitroApp.hooks.callHook('feathers:v6:afterTeardown', context)
     }
+    catch (error: unknown) {
+      errors.push(error)
+    }
+
+    throwTeardownErrors(entry, errors)
   })()
 
   return entry.teardownPromise

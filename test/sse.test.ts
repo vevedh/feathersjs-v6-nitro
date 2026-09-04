@@ -113,7 +113,8 @@ describe('native Feathers v6 SSE transport', () => {
   })
 
   it('streams connected and service-created events, then cleans up on abort', async () => {
-    const { baseUrl, disconnect } = await startSseServer()
+    const { app, baseUrl, disconnect } = await startSseServer()
+    const publishListenersBefore = app.listeners('publish').length
     const controller = new AbortController()
     const response = await fetch(`${baseUrl}/api/realtime/events`, { signal: controller.signal })
 
@@ -121,6 +122,7 @@ describe('native Feathers v6 SSE transport', () => {
     expect(response.headers.get('content-type')).toContain('text/event-stream')
     expect(response.headers.get('cache-control')).toBe('no-cache, no-transform')
     expect(response.headers.get('x-accel-buffering')).toBe('no')
+    expect(app.listeners('publish')).toHaveLength(publishListenersBefore + 1)
 
     const reader = response.body?.getReader()
     if (!reader) {
@@ -149,6 +151,7 @@ describe('native Feathers v6 SSE transport', () => {
     controller.abort()
     await vi.waitFor(() => {
       expect(disconnect).toHaveBeenCalledTimes(1)
+      expect(app.listeners('publish')).toHaveLength(publishListenersBefore)
     }, { timeout: 2000, interval: 20 })
   })
 

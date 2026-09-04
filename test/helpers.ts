@@ -15,7 +15,7 @@ export function createMockNitroApp(): NitroApp {
     localCall: vi.fn(),
     localFetch: vi.fn(),
     captureError: vi.fn(),
-  } as unknown as NitroApp
+  }
 }
 
 export function createLifecycleApp(overrides: Partial<Application> = {}): Application {

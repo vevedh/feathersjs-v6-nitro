@@ -1,6 +1,6 @@
 {
   "name": "@vevedh/feathersjs-v6-nitro",
-  "version": "0.1.0-alpha.7",
+  "version": "0.1.0-alpha.9",
   "description": "Native FeathersJS v6 HTTP, SSE and optional Socket.IO integration for Nuxt 4 and Nitro, with a full interactive playground",
   "type": "module",
   "license": "MIT",
@@ -36,11 +36,12 @@
   ],
   "packageManager": "pnpm@9.15.9",
   "engines": {
-    "node": ">=22.12.0"
+    "node": "^22.19.0 || ^24.11.0 || >=26.0.0"
   },
   "publishConfig": {
     "access": "public",
-    "provenance": true
+    "provenance": true,
+    "tag": "next"
   },
   "files": [
     "dist",
@@ -108,7 +109,7 @@
     "test:watch": "vitest",
     "test:e2e": "node scripts/clean-nuxt-test-artifacts.mjs && vitest run --config vitest.e2e.config.ts --no-file-parallelism",
     "pack:check": "node scripts/check-pack-contents.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run test && npm run build && npm run check:contract && npm run test:exports && npm run check:publint && npm run check:types-package && npm run build:playground",
+    "verify": "npm run typecheck && npm run lint && npm run test:coverage && npm run build && npm run check:contract && npm run check:toolchain && npm run test:exports && npm run check:publint && npm run check:types-package && npm run build:playground",
     "build:playground": "nuxi build playground/nuxt-app",
     "test:exports": "node scripts/test-exports.mjs",
     "verify:release": "npm run verify && npm run test:e2e && npm run pack:check",
@@ -118,37 +119,46 @@
     "check:contract": "node scripts/check-package-contract.mjs",
     "dev:playground": "nuxi dev playground/nuxt-app",
     "test:vitest": "vitest run",
-    "test:playground": "npm run test:e2e"
+    "test:playground": "npm run test:e2e",
+    "check:toolchain": "node scripts/check-toolchain-contract.mjs",
+    "validate:patch010:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch010.ps1",
+    "test:coverage": "vitest run --coverage.enabled",
+    "bootstrap:patch011:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-patch011.ps1",
+    "validate:patch011:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch011.ps1"
   },
   "peerDependencies": {
     "feathers": ">=6.0.0-pre.11 <7.0.0",
-    "h3": ">=1.15.0 <3.0.0",
+    "h3": ">=1.15.0 <2.0.0",
     "nitropack": ">=2.13.0 <3.0.0",
     "socket.io": ">=4.8.0 <5.0.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
-    "@nuxt/test-utils": "4.0.3",
-    "@types/node": "22.20.0",
-    "@typescript-eslint/eslint-plugin": "8.46.1",
-    "@typescript-eslint/parser": "8.46.1",
+    "@nuxt/test-utils": "4.2.0",
+    "@types/node": "22.20.1",
+    "@typescript-eslint/eslint-plugin": "8.69.0",
+    "@typescript-eslint/parser": "8.69.0",
+    "@vitest/coverage-v8": "4.1.11",
     "eslint": "9.39.5",
     "feathers": "6.0.0-pre.11",
     "h3": "1.15.11",
     "nitropack": "2.13.4",
-    "nuxt": "4.4.8",
-    "publint": "0.3.15",
+    "nuxt": "4.5.2",
+    "publint": "0.3.24",
     "socket.io": "4.8.3",
     "socket.io-client": "4.8.3",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.46.1",
+    "typescript-eslint": "8.69.0",
     "unbuild": "3.6.1",
-    "vitest": "4.1.9",
-    "vue-tsc": "3.3.5"
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
+    "vue-tsc": "3.3.11"
   },
   "pnpm": {
     "overrides": {
-      "vue-router": "5.0.3"
+      "vite": "8.2.2",
+      "vue": "3.5.42",
+      "vue-router": "5.2.0"
     }
   },
   "sideEffects": false,

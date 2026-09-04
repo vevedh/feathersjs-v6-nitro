@@ -299,7 +299,7 @@ export function secureBodyParser(maxBodySize: number): Middleware {
           headers: context.request.headers,
           body: bytes as BodyInit,
         })
-        context.data = formDataToObject(await multipartRequest.formData()) as unknown as Record<string, unknown>
+        context.data = formDataToObject(await multipartRequest.formData())
       }
       else {
         context.data = context.request.body as unknown as Record<string, unknown>

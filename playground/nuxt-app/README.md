@@ -2,6 +2,8 @@
 
 Ce playground valide toutes les couches de `@vevedh/feathersjs-v6-nitro` depuis une application Nuxt 4 réelle.
 
+La baseline validée des Patches 009/010 est **Nuxt `4.5.2` + Vite `8.2.2`**, avec Vue `3.5.42` et Vue Router `5.2.0` résolus par le workspace.
+
 ## Fonctionnalités testables depuis l'interface
 
 - CRUD Feathers v6 complet : `find`, `get`, `create`, `update`, `patch`, `remove` ;
