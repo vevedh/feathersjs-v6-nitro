@@ -29,7 +29,7 @@ Le cœur s'appuie sur les primitives Web Standards de Feathers v6 et de Nitro : 
 - tests unitaires, intégration H3, couverture V8 avec seuils et E2E Nuxt 4 ;
 - contrôle `publint`, `@arethetypeswrong/cli` et contenu du tarball ;
 - CI Linux/Windows sur Node.js 22.19.0 et 24.11.0, avec job de couverture V8 dédié ;
-- workflow npm avec provenance.
+- publication npm sans token via GitHub Trusted Publishing (OIDC) avec provenance automatique.
 
 ### Compatibilité Socket.IO optionnelle
 
@@ -587,16 +587,21 @@ La baseline Patch 011 validée atteint **83,56 % statements**, **76,49 % branche
 
 ## Publication
 
-Le workflow `.github/workflows/release.yml` exécute `pnpm verify:release` et publie avec provenance npm exclusivement sous le dist-tag `next` tant que Feathers v6 reste en prérelease. `publishConfig.tag` applique le même garde-fou aux publications manuelles.
+La publication npm passe exclusivement par **GitHub Trusted Publishing (OIDC)**. Le workflow `.github/workflows/release.yml` exécute le gate complet, utilise un runner GitHub hébergé avec `id-token: write`, puis publie sous le dist-tag `next` sans token npm longue durée. npm génère automatiquement la provenance pour ce package public publié depuis ce dépôt public.
 
-Avant une publication manuelle :
+Une publication locale avec `npm publish` est volontairement bloquée par `prepublishOnly`. Pour publier :
+
+1. configurer une fois le Trusted Publisher npm pour `vevedh/feathersjs-v6-nitro`, workflow `release.yml`, environnement `npm`, avec l'action `npm publish` autorisée ;
+2. pousser la version validée sur `main` ;
+3. lancer le workflow GitHub Actions **Publish npm** depuis `main`.
+
+Le workflow exécute finalement :
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm verify:release
-npm pack
-npm publish --access public --provenance --tag next
+npm publish --access public --tag next
 ```
+
+Il ne doit contenir ni `NPM_TOKEN`, ni `NODE_AUTH_TOKEN`, ni `--provenance`. Voir [RELEASING.md](./RELEASING.md) pour la procédure complète.
 
 ## État de la version 0.1.0-alpha.9
 
@@ -611,6 +616,7 @@ npm publish --access public --provenance --tag next
 - Patch 009 : baseline Nuxt `4.5.2`, Vite `8.2.2`, Vue `3.5.42`, Vitest `4.1.11` et Node `22.19+` ;
 - Patch 010 : promotion `0.1.0-alpha.8`, lockfile régénéré puis figé et gate de release Windows complet validé ;
 - Patch 011 : `0.1.0-alpha.9` validé avec couverture V8 obligatoire, 67/67 tests unitaires, 6/6 E2E, seuils CI, contrôles de fuite de listeners et lockfile figé.
+- Patch 012 : migration de la publication `alpha.9` vers npm Trusted Publishing/OIDC, suppression des tokens longue durée et blocage des publications locales.
 
 ## Contribution et sécurité
 

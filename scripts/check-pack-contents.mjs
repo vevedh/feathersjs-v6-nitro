@@ -13,7 +13,7 @@ const [pack] = JSON.parse(output.slice(jsonStart))
 assert.ok(pack, 'npm pack did not return package metadata.')
 
 const files = pack.files.map(entry => entry.path)
-const allowedRootFiles = new Set(['package.json', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE'])
+const allowedRootFiles = new Set(['package.json', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'RELEASING.md', 'LICENSE'])
 for (const required of allowedRootFiles) {
   assert.ok(files.includes(required), `Required published file is missing: ${required}`)
 }

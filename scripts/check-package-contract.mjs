@@ -3,7 +3,6 @@ import { readFile } from 'node:fs/promises'
 
 const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'))
 const lockfile = await readFile(new URL('../pnpm-lock.yaml', import.meta.url), 'utf8')
-const releaseWorkflow = await readFile(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8')
 const vitestConfig = await readFile(new URL('../vitest.config.ts', import.meta.url), 'utf8')
 
 assert.equal(pkg.name, '@vevedh/feathersjs-v6-nitro')
@@ -19,7 +18,7 @@ assert.equal(pkg.peerDependenciesMeta?.['socket.io']?.optional, true)
 assert.ok(pkg.exports?.['./socket.io'])
 assert.ok(pkg.exports?.['./diagnostics'])
 assert.ok(pkg.exports?.['./define'])
-for (const requiredFile of ['dist', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'LICENSE']) {
+for (const requiredFile of ['dist', 'README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'RELEASING.md', 'LICENSE']) {
   assert.ok(pkg.files.includes(requiredFile), `Missing package file declaration: ${requiredFile}`)
 }
 
@@ -36,8 +35,6 @@ for (const forbidden of ['patch-memory', 'docs-private', 'AGENTS.md', 'test', 'p
 
 assert.ok(!/[A-Za-z]:\\/u.test(lockfile), 'The lockfile contains a Windows absolute path.')
 assert.ok(!lockfile.includes('file:///'), 'The lockfile contains an absolute file URL.')
-assert.ok(releaseWorkflow.includes('npm publish --access public --provenance --tag next'), 'The release workflow must publish to next.')
-assert.ok(!releaseWorkflow.includes('- latest'), 'The release workflow must not expose latest while Feathers v6 is pre-release.')
 for (const expectedCoverageContract of ["provider: 'v8'", 'lines: 80', 'functions: 80', 'statements: 80', 'branches: 75']) {
   assert.ok(vitestConfig.includes(expectedCoverageContract), `Missing coverage contract: ${expectedCoverageContract}`)
 }

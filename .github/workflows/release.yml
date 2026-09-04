@@ -13,21 +13,27 @@ concurrency:
 
 jobs:
   publish:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: npm
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.15.9
-          run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22.19.0
           registry-url: https://registry.npmjs.org
-          cache: pnpm
+          package-manager-cache: false
+      - name: Pin npm CLI for OIDC trusted publishing
+        run: npm install --global npm@11.19.0
+      - name: Pin pnpm
+        run: npm install --global pnpm@9.15.9
+      - name: Tool versions
+        run: |
+          node --version
+          npm --version
+          pnpm --version
       - run: pnpm install --frozen-lockfile
       - run: pnpm verify:release
-      - run: npm publish --access public --provenance --tag next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm with Trusted Publishing
+        run: npm publish --access public --tag next

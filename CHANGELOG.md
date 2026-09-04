@@ -2,7 +2,21 @@
 
 ## 0.1.0-alpha.9 — 2026-09-04
 
-- Patch 011-r3: compatibility cleanup for `typescript-eslint 8.69.0` (remove unnecessary assertions/default assignment) with no intended runtime behavior change.
+### Publication sécurisée — Patch 012
+
+- migration du workflow npm vers **GitHub Trusted Publishing (OIDC)** ;
+- suppression de `NODE_AUTH_TOKEN`, `NPM_TOKEN` et du flag `--provenance` dans le workflow de release ; npm génère automatiquement la provenance avec Trusted Publishing ;
+- suppression de `publishConfig.provenance` afin de ne plus déclencher une génération de provenance impossible depuis un poste local ;
+- ajout d'un `prepublishOnly` qui bloque volontairement toute publication hors du workflow GitHub `release.yml` sur `main` et vérifie la présence du contexte OIDC ;
+- workflow limité à `main`, runner GitHub `ubuntu-latest`, environnement GitHub `npm`, `id-token: write`, npm CLI `11.19.0` et pnpm `9.15.9` ;
+- ajout de `pnpm check:publishing`, inclus dans `verify`, pour empêcher le retour d'un token npm longue durée, de `--provenance`, de `latest` ou d'un runner self-hosted ;
+- ajout de `RELEASING.md` avec la configuration Trusted Publisher et la procédure de publication ;
+- aucun changement runtime, aucune dépendance applicative modifiée et lockfile Patch 011 conservé.
+- Patch 012-r2 : le self-test du garde de publication locale est désormais exécuté via un helper Node cross-platform ; cela évite `NativeCommandError` sous Windows PowerShell 5.1 lorsqu'un échec Node est volontairement attendu.
+
+### Compatibilité lint — Patch 011-r3
+
+- nettoyage de compatibilité avec `typescript-eslint 8.69.0` : suppression d'assertions de type et d'un default assignment devenus inutiles, sans changement de comportement runtime attendu.
 
 ### Qualité et couverture — Patch 011
 

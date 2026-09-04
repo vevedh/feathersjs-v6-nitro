@@ -40,7 +40,6 @@
   },
   "publishConfig": {
     "access": "public",
-    "provenance": true,
     "tag": "next"
   },
   "files": [
@@ -49,7 +48,8 @@
     "CHANGELOG.md",
     "LICENSE",
     "CONTRIBUTING.md",
-    "SECURITY.md"
+    "SECURITY.md",
+    "RELEASING.md"
   ],
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -109,13 +109,13 @@
     "test:watch": "vitest",
     "test:e2e": "node scripts/clean-nuxt-test-artifacts.mjs && vitest run --config vitest.e2e.config.ts --no-file-parallelism",
     "pack:check": "node scripts/check-pack-contents.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run test:coverage && npm run build && npm run check:contract && npm run check:toolchain && npm run test:exports && npm run check:publint && npm run check:types-package && npm run build:playground",
+    "verify": "npm run typecheck && npm run lint && npm run test:coverage && npm run build && npm run check:contract && npm run check:toolchain && npm run check:publishing && npm run test:exports && npm run check:publint && npm run check:types-package && npm run build:playground",
     "build:playground": "nuxi build playground/nuxt-app",
     "test:exports": "node scripts/test-exports.mjs",
     "verify:release": "npm run verify && npm run test:e2e && npm run pack:check",
     "check:publint": "publint",
     "check:types-package": "attw --pack . --profile esm-only",
-    "check:package": "npm run build && npm run test:exports && npm run check:publint && npm run check:types-package && npm run pack:check",
+    "check:package": "npm run build && npm run check:publishing && npm run test:exports && npm run check:publint && npm run check:types-package && npm run pack:check",
     "check:contract": "node scripts/check-package-contract.mjs",
     "dev:playground": "nuxi dev playground/nuxt-app",
     "test:vitest": "vitest run",
@@ -124,7 +124,11 @@
     "validate:patch010:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch010.ps1",
     "test:coverage": "vitest run --coverage.enabled",
     "bootstrap:patch011:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-patch011.ps1",
-    "validate:patch011:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch011.ps1"
+    "validate:patch011:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch011.ps1",
+    "check:publishing": "node scripts/check-publishing-contract.mjs && node scripts/check-local-publish-guard.mjs",
+    "prepublishOnly": "node scripts/assert-trusted-publish-context.mjs",
+    "validate:patch012:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-patch012.ps1",
+    "check:local-publish-guard": "node scripts/check-local-publish-guard.mjs"
   },
   "peerDependencies": {
     "feathers": ">=6.0.0-pre.11 <7.0.0",
