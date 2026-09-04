@@ -2,6 +2,12 @@
 
 ## 0.1.0-alpha.9 — 2026-09-04
 
+### Patch 012-r5 — compatibilité npm 12 pack manifest
+
+- adapte `scripts/check-pack-contents.mjs` aux deux formats `npm pack --dry-run --json` : tableau historique et objet indexé par package utilisé par npm 12 ;
+- conserve les contrôles stricts des fichiers publiés et vérifie `entryCount` lorsque npm le fournit ;
+- aucun changement runtime, test, dépendance, lockfile ou version package.
+
 ### Patch 012-r4 — npm 12 OIDC publication runner
 
 - Move the npm Trusted Publishing release runner from Node.js `22.19.0` to Node.js `24.15.0`.
