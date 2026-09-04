@@ -21,11 +21,11 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: 22.19.0
+          node-version: 24.15.0
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
       - name: Pin npm CLI for OIDC trusted publishing
-        run: npm install --global npm@11.19.0
+        run: npm install --global npm@12.0.2
       - name: Pin pnpm
         run: npm install --global pnpm@9.15.9
       - name: Tool versions

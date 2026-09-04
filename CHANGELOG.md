@@ -2,6 +2,13 @@
 
 ## 0.1.0-alpha.9 — 2026-09-04
 
+### Patch 012-r4 — npm 12 OIDC publication runner
+
+- Move the npm Trusted Publishing release runner from Node.js `22.19.0` to Node.js `24.15.0`.
+- Pin npm CLI `12.0.2` for the OIDC publish step; npm 12.0.2 requires `^22.22.2 || ^24.15.0 || >=26.0.0`.
+- Keep `actions/setup-node@v7`, tokenless OIDC, the strict local-publish guard, `pnpm@9.15.9` and the `next` dist-tag unchanged.
+- No runtime, test, dependency or lockfile change.
+
 ### Patch 012-r3 — setup-node v7 OIDC compatibility
 
 - Use `actions/setup-node@v7` in the npm release workflow.
@@ -16,7 +23,7 @@
 - suppression de `NODE_AUTH_TOKEN`, `NPM_TOKEN` et du flag `--provenance` dans le workflow de release ; npm génère automatiquement la provenance avec Trusted Publishing ;
 - suppression de `publishConfig.provenance` afin de ne plus déclencher une génération de provenance impossible depuis un poste local ;
 - ajout d'un `prepublishOnly` qui bloque volontairement toute publication hors du workflow GitHub `release.yml` sur `main` et vérifie la présence du contexte OIDC ;
-- workflow limité à `main`, runner GitHub `ubuntu-latest`, environnement GitHub `npm`, `id-token: write`, npm CLI `11.19.0` et pnpm `9.15.9` ;
+- workflow limité à `main`, runner GitHub `ubuntu-latest`, environnement GitHub `npm`, `id-token: write`, npm CLI `12.0.2`, Node `24.15.0` et pnpm `9.15.9` ;
 - ajout de `pnpm check:publishing`, inclus dans `verify`, pour empêcher le retour d'un token npm longue durée, de `--provenance`, de `latest` ou d'un runner self-hosted ;
 - ajout de `RELEASING.md` avec la configuration Trusted Publisher et la procédure de publication ;
 - aucun changement runtime, aucune dépendance applicative modifiée et lockfile Patch 011 conservé.

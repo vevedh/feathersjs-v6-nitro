@@ -14,14 +14,16 @@ On npmjs.com, open the package settings for `@vevedh/feathersjs-v6-nitro`, then 
 
 The workflow filename is only the file name, not `.github/workflows/release.yml`.
 
-With npm CLI 11.19.0, the same relationship can be configured from a maintainer workstation:
+Patch 012-r4 validates publication with Node.js `24.15.0` and npm CLI `12.0.2`. npm 12 requires Node.js `^22.22.2 || ^24.15.0 || >=26.0.0`, so the release workflow intentionally uses the Node 24 LTS line even though the project itself remains compatible with Node 22.19.0.
+
+The same Trusted Publisher relationship can be configured from a maintainer workstation running a compatible Node.js version:
 
 ```bash
-npm install --global npm@11.19.0
+npm install --global npm@12.0.2
 npm trust github @vevedh/feathersjs-v6-nitro --repo vevedh/feathersjs-v6-nitro --file release.yml --env npm --allow-publish -y
 ```
 
-The release workflow uses `actions/setup-node@v7`; older setup-node releases exported a dummy `NODE_AUTH_TOKEN` (`XXXXX-XXXXX-XXXXX-XXXXX`) when `registry-url` was configured, which conflicts with the strict tokenless publish guard.
+The release workflow uses `actions/setup-node@v7`, Node.js `24.15.0` and npm CLI `12.0.2`; older setup-node releases exported a dummy `NODE_AUTH_TOKEN` (`XXXXX-XXXXX-XXXXX-XXXXX`) when `registry-url` was configured, which conflicts with the strict tokenless publish guard.
 
 The repository and package are public, so npm Trusted Publishing automatically creates provenance attestations. The workflow therefore does not pass `--provenance` and does not use `NPM_TOKEN` or `NODE_AUTH_TOKEN`.
 
